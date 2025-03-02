@@ -15,3 +15,5 @@ Also ItemMedia which users can upload image and video for items.
 - created_at
 
 First please make CRUD UI in admin console for Items. Users can upload photos and videos for the item in idem detail page
+
+Before start changing files, please make feature branch and commit changes when you finised
