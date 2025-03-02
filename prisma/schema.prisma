@@ -18,3 +18,25 @@ model User {
   created_at DateTime @default(now())
   modified_at DateTime @updatedAt
 }
+
+model Item {
+  id          Int         @id @default(autoincrement())
+  name        String
+  description String      @db.Text
+  price       Float
+  created_at  DateTime    @default(now())
+  modified_at DateTime    @updatedAt
+  media       ItemMedia[]
+}
+
+model ItemMedia {
+  id          Int      @id @default(autoincrement())
+  item_id     Int
+  item        Item     @relation(fields: [item_id], references: [id], onDelete: Cascade)
+  filename    String
+  filetype    String   // "image" or "video"
+  created_at  DateTime @default(now())
+  modified_at DateTime @updatedAt
+
+  @@index([item_id])
+}
