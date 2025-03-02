@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import MediaItem from "@/components/MediaItem";
 
 interface ItemMedia {
   id: number;
@@ -50,9 +51,11 @@ export default function HomePage() {
     fetchItems();
   }, []);
 
-  const getFirstImage = (item: Item) => {
+  const getFirstMedia = (item: Item) => {
+    if (item.media.length === 0) return null;
+    // Prioritize images for the first display, then videos
     const imageMedia = item.media.find((m: ItemMedia) => m.filetype === "image");
-    return imageMedia ? imageMedia.filename : null;
+    return imageMedia || item.media[0];
   };
 
   if (loading) {
@@ -127,12 +130,12 @@ export default function HomePage() {
           <Link key={item.id} href={`/items/${item.id}`}>
             <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
               <div className="h-48 bg-gray-200 relative">
-                {getFirstImage(item) ? (
-                  <Image
-                    src={getFirstImage(item)!}
+                {getFirstMedia(item) ? (
+                  <MediaItem
+                    media={getFirstMedia(item)!}
                     alt={item.name}
-                    fill
-                    className="object-cover"
+                    aspectRatio="square"
+                    enableLightbox={false}
                   />
                 ) : (
                   <div className="h-full w-full flex items-center justify-center bg-gray-200">

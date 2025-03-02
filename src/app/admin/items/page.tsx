@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import MediaItem from "@/components/MediaItem";
 
 interface ItemMedia {
   id: number;
@@ -163,14 +164,14 @@ export default function ItemsPage() {
                   <td className="px-6 py-4">
                     <div className="flex items-center">
                       <div className="flex-shrink-0 h-10 w-10">
-                        {getFirstImage(item) ? (
-                          <Image
-                            className="h-10 w-10 object-cover rounded"
-                            src={getFirstImage(item)!}
-                            alt={item.name}
-                            width={40}
-                            height={40}
-                          />
+                        {item.media.length > 0 ? (
+                          <div className="h-10 w-10 rounded overflow-hidden">
+                            <MediaItem
+                              media={item.media[0]}
+                              alt={item.name}
+                              enableLightbox={false}
+                            />
+                          </div>
                         ) : (
                           <div className="h-10 w-10 rounded bg-gray-200 flex items-center justify-center text-gray-500">
                             <svg

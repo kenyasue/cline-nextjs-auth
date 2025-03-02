@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import MediaItem from "@/components/MediaItem";
+import Lightbox from "@/components/Lightbox";
 
 interface ItemMedia {
   id: number;
@@ -112,37 +114,12 @@ export default function ItemDetailPage({
           <div className="md:w-1/2 p-4">
             <div className="mb-4 bg-gray-100 rounded-lg overflow-hidden relative" style={{ height: "400px" }}>
               {activeMedia ? (
-                activeMedia.filetype === "image" ? (
-                  <Image
-                    src={activeMedia.filename}
-                    alt={displayItem.name}
-                    fill
-                    className="object-contain"
-                  />
-                ) : (
-                  <div className="h-full w-full flex items-center justify-center bg-gray-200">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-20 w-20 text-gray-400"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                  </div>
-                )
+                <MediaItem
+                  media={activeMedia}
+                  alt={displayItem.name}
+                  aspectRatio="auto"
+                  className="h-full"
+                />
               ) : (
                 <div className="h-full w-full flex items-center justify-center bg-gray-200">
                   <svg
@@ -182,27 +159,63 @@ export default function ItemDetailPage({
                         className="object-cover rounded"
                       />
                     ) : (
-                      <div className="h-full w-full flex items-center justify-center bg-gray-200 rounded">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-6 w-6 text-gray-400"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
-                          />
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
-                        </svg>
+                      <div className="relative h-full w-full">
+                        <Image
+                          src={`/api/items/${params.id}/media/thumbnail?mediaId=${media.id}`}
+                          alt={`Video thumbnail ${media.id}`}
+                          fill
+                          className="object-cover rounded"
+                          onError={(e) => {
+                            // Fallback if thumbnail fails to load
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = 'none';
+                            const parent = target.parentElement;
+                            if (parent) {
+                              parent.innerHTML = `
+                                <div class="h-full w-full flex items-center justify-center bg-gray-200 rounded">
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="h-6 w-6 text-gray-400"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                  >
+                                    <path
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                      stroke-width="2"
+                                      d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
+                                    />
+                                    <path
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                      stroke-width="2"
+                                      d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                    />
+                                  </svg>
+                                </div>
+                              `;
+                            }
+                          }}
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="bg-black bg-opacity-30 rounded-full p-1">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-4 w-4 text-white"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
+                              />
+                            </svg>
+                          </div>
+                        </div>
                       </div>
                     )}
                   </div>
